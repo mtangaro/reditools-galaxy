@@ -21,7 +21,7 @@ import gzip
 import argparse
 import os
 from multiprocessing import Process, Queue
-from queue import Empty
+from Queue import Empty
 import time
 
 list_var = ['AC', 'AG', 'AT', 'CA', 'CG', 'CT', 'GA', 'GC', 'GT', 'TA', 'TC', 'TG']
