@@ -580,6 +580,7 @@ for i in gbamfile:
         if not os.path.exists(i[0] + '.bai') and not sortgbam:
             sys.stderr.write('Indexing DNA-Seq BAM file %s.\n' % (i[0]))
             pysam.index(i[0])
+nogbam = 0
 if len(gbamfile) == 0:
     sys.stderr.write('Working without DNA-Seq BAM file(s).\n')
     nogbam = 1
