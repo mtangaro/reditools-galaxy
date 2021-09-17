@@ -1,0 +1,228 @@
+<tool id="reditools_wrapper" name="REDItoolDnaRna" version="0.99">
+  <description>python scripts for RNA editing detection by RNA-Seq data</description>
+  <requirements>
+    <requirement type="package" version="2.7">python</requirement>
+    <requirement type="package" version="1.0.4">reditools</requirement>
+    <requirement type="package" version="0.15">pysam</requirement>
+    <requirement type="package" version="0.1.4">fisher</requirement>
+  </requirements>
+  <macros>
+    <import>reditools_wrapper_macros.xml</import>
+  </macros>
+  <command>
+    <![CDATA[
+      
+      REDItoolDnaRna
+
+      ############################
+      ## Single/Paired file
+
+      #if $library.type == "single" or $library.type == "paired":
+
+        ## Input RNA-Seq BAM file
+        -i "$library.rna_input"
+
+        ## Sort RNA-Seq
+        #if str( $library.rna_sort ) == "true":
+          -I
+        #end if
+
+        #if $library.type == "paired"
+
+          ## DNA-Seq file
+          -j "$library.dna_input"
+
+          ## Sort DNA-Seq
+          #if str( $library.dna_sort ) == "true":
+            -J
+          #end if
+
+        #end if
+
+        ## Reference data options
+        @REFERENCE_FILE@
+
+        ## Output options
+        @OUTPUT_OPTIONS@
+
+        ## Load reditools advanced options
+        @reditools_advanced_options@
+
+      ############################
+      ## Paired collection
+
+      #elif $library.type == "paired_collection":
+
+        ## Input RNA-Seq BAM file
+        -i "$library.rna_dna_paired_input.forward"
+
+        ## Sort RNA-Seq
+        #if str( $library.rna_sort ) == "true":
+          -I
+        #end if
+
+        ## DNA-Seq file
+        -j "$library.rna_dna_paired_input['reverse']"
+
+        ## Sort DNA-Seq
+        #if str( $library.dna_sort ) == "true":
+          -J
+        #end if
+
+        ## Reference data options
+        @REFERENCE_FILE@
+
+        ## Output options
+        @OUTPUT_OPTIONS@
+
+        ## Load reditools advanced options
+        @reditools_advanced_options@
+
+      #end if
+
+    ]]>
+  </command>
+ 
+  <inputs>
+      <!-- single/paired -->
+      <conditional name="library">
+
+          <param name="type" type="select" label="Single or Paired, file or collection">
+              <option value="single" selected="true">Single file</option>
+              <option value="paired">Paired files</option>
+              <option value="paired_collection">Paired Dataset Collection</option>
+          </param>
+
+          <when value="single">
+              <param name="rna_input" format="bam" type="data" label="RNA-Seq BAM file."/>
+              <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+          </when>
+
+          <when value="paired">
+              <param name="rna_input" format="bam" type="data" label="RNA-Seq BAM file."/>
+              <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+              <param name="dna_input" format="bam" type="data" label="DNA-Seq BAM files separated by comma or folder containing BAM files." help=" Note that chromosome/region names in the reference must match chromosome/region names in BAMs files."/>
+              <param name="dna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
+          </when>
+
+          <when value="paired_collection">
+              <param name="rna_dna_paired_input" type="data_collection" collection_type="paired" label="RNA/DNA paired collection" />
+              <param name="rna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input RNA-Seq BAM file." />
+              <param name="dna_sort" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort input DNA-Seq BAM file." />
+          </when>
+
+      </conditional>
+
+    <!-- reference genome -->
+    <param name="reference" format="fasta" type="data" label="Reference file in fasta format." help=" Note that each chromosome/region must be present in a single BAM file only."/>
+
+    <!-- Advanced options -->
+    <section name="advanced" expanded="false" title="Advanced parameters">
+
+        <param name="base_interval" type="integer" value="100000" label="Base Interval to explore" help="Default: 100000" />
+        <conditional name="list_chrm_options">
+            <param name="type" type="select" label="List of chromosomes to skip" help="List or file" >
+                <option value="list">list</option>
+                <option value="file">file</option>
+            </param>
+            <when value="list">
+                <param name="list_chrm" type="text" label="Separated by space ex: chr1 chr2" />
+            </when>
+            <when value="file">
+                <param name="list_chrm" type="data" format="txt" label="File with separated by space ex: chr1 chr2" />
+            </when>
+        </conditional>
+        <param name="region" type="text" label="Work Only On Region: chrxx:start-end." help="positions are distributed by the number of threads"/>
+        <param name="save_list_qual" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Save a list of columns with quality scores" />
+        <param name="min_read_coverage" type="text" value="10 10" label="Min. read coverage (dna rna)" help="Default: 10 10"/>
+        <param name="min_qual_score" type="text" value="30 30" label="Min. quality score (dna rna)" help="Default: 30 30"/>
+        <param name="min_map_qual_scor" type="text" value="30 30" label="Min. mapping quality score (dna rna)" help="Default: 30 30. For Bowtie use 255, Bowtie2 use 40, BWA use 30, RNA-STAR use 255, HiSAT2 use 60, Tophat1 use 255, Tophat2 use 50, GSNAP use 30"/>
+        <param name="min_homo_length" type="text" value="5 5" label=" Min. homoplymeric length (dna rna)" help="Default: 5 5" />
+        <param name="infer_strand" type="select" label="Infer strand for strand oriented reads" help="Default: 1" >
+            <option value="0">0</option>
+            <option value="1" selected="true">1</option>
+            <option value="2">2</option>
+            <option value="12">12</option>
+        </param>
+        <param name="strand_type" type="select" value="1" label="Strand type" help="1:maxValue, 2:useConfidence [Default: 1]" >
+            <option value="1" selected="true">1</option>
+            <option value="2">2</option>
+        </param>
+        <param name="strand_conf" type="float" value="0.70" label="Strand confidence" help="Default: 0.70"/>
+        <param name="strand_corr" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Strand correction" />
+        <param name="infer_gff" type="data" format="gff" label="Infer strand by GFF annotation" help="Must be GFF and sorted, otherwise use 'Sort annotation files' option" optional="true" />
+        <param name="exclude_gff" type="data" format="gff" label="GFF File with positions to exclude" help="Must be GFF and sorted, otherwise use 'Sort annotation file' option" optional="true" />
+        <param name="include_gff" type="data" format="gff" label="Work only on given GFF positions" help="Must be GFF and sorted, otherwise use 'Sort annotation file' option" optional="true" />
+        <param name="sort_ann_file" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Sort annotation files" />
+        <param name="ex_mh_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude multi hits in RNA-Seq" />
+        <param name="ex_mh_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude multi hits in DNA-Seq" />
+        <param name="ex_dup_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude duplicates in RNA-Seq" />
+        <param name="ex_dup_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude duplicates in DNA-Seq" />
+        <param name="use_pair_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Use paired concardant reads only in RNA-Seq" />
+        <param name="use_pair_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Use paired concardant reads only in DNA-Seq" />
+        <param name="cons_map_qual_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Consider mapping quality in RNA-Seq" />
+        <param name="cons_map_qual_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Consider mapping quality in DNA-Seq" />
+
+        <param name="trim_rna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in RNA-Seq" help="Default: 0 0" />
+        <param name="trim_dna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in DNA-Seq" help="Default: 0 0" />
+        <!--param name="blat_corr_rna" Blat folder for correction in RNA-Seq-->
+        <!--param name="blat_corr_dna" Blat folder for correction in DNA-Seq-->
+        <param name="rm_subs_homo_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in RNA-Seq" />
+        <param name="rm_subs_homo_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in DNA-Seq" />
+        <param name="min_reads_sup_var" type="integer" value="3" label="Min. num. of reads supporting the variation for RNA-Seq" help="Default: 3" />
+        <param name="min_ed_freq_rna" type="float" value="0.10" label="Min. editing frequency for RNA-Seq" help="Default: 0.10" />
+        <param name="min_ed_freq_dna" type="float" value="0.10" label="Min. editing frequency for DNA-Seq" help="Default: 0.10" />
+        <param name="ex_pos_mult_ch_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude positions with multiple changes in RNA-Seq" />
+        <param name="ex_pos_mult_ch_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude positions with multiple changes in DNA-Seq" />
+        <param name="list_var" type="text" value="all" label="Select RNA-Seq positions with defined changes (separated by space ex: AG TC)" help="Default: all" />
+        <param name="ex_invar_pos" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude invariant RNA-Seq positions" />
+        <param name="ex_sites_not_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Exclude sites not supported by DNA-Seq" />
+        <param name="file_splice" format="txt" type="data" label="File Splice" help="File containing splice sites annotations" optional="true"/>
+        <param name="n_bases_near_splice" type="integer" value="4" label="Num. of bases near splice sites to explore" help="Default: 4" />
+        <param name="no_head" type="boolean" truevalue="true" falsevalue="false" checked="False" label="No Table Header" />
+        <param name="gzip" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Gzip output files" />
+
+        <param name="reads" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Get reads containing nuc. changes" />
+        <param name="fastq_files" format="fastq" type="data" label="Fastq to get reads" help="[requires -RR or reads], separated by space [if paired]" optional="true" />
+        <!--param name="addP Add positions for reads-->
+        <!--param name="rmOver        Remove overlapping reads-->
+        <!--param name="rmIndels      Remove positions with surrounding Indels-->
+
+    </section>
+
+  </inputs>
+ 
+  <!-- define outputs -->
+
+  <outputs>
+    <data format="txt" name="parameters.txt" from_work_dir="output/DnaRna_reditools_output/parameters.txt" label="${tool.name} on ${on_string}: Parameters" />
+    <data format="tabular" name="output_outTable" from_work_dir="output/DnaRna_reditools_output/output_outTable" label="${tool.name} on ${on_string}: outTable" >
+      <filter>gzip=="false"</filter>
+    </data>
+    <data format="tabular" name="output_outTable" from_work_dir="output/DnaRna_reditools_output/output_outTable.gz" label="${tool.name} on ${on_string}: outTable.gz" >
+      <filter>gzip</filter>
+    </data>
+  </outputs>
+
+  <tests>
+    <test>
+      <param name="input" value="rna.bam"/>
+      <output name="out_file1" file="outTable" />
+    </test>
+  </tests>
+
+  <stdio>
+    <regex match="Pysam module not found."
+           source="both"
+           level="fatal"
+           description="Pysam module not found" />
+
+    <exit_code range="2" level="fatal" description="REDItools pid is not integer" />
+    <exit_code range="3" level="fatal" description="Missing workding directory" />
+  </stdio>
+
+  <help>
+    This tool computes GC content from a FASTA file.
+  </help>
+
+</tool>

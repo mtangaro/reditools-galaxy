@@ -1,0 +1,193 @@
+<macros>
+  <!-- Import -->
+
+  <token name="@REFERENCE_FILE@">
+      ## Reference file
+      -f "${reference}"
+  </token>
+
+  <token name="@OUTPUT_OPTIONS@">
+    ## Output file
+    -o output
+  </token>
+
+  <token name="@reditools_advanced_options@">
+
+    ## Set number of threads
+    -t "\${GALAXY_SLOTS:-4}"
+
+    #if int($advanced.base_interval) != 100000:
+      -C ${advanced.base_interval}
+    #end if
+
+    #if $advanced.list_chrm_options.type == "list" and str($advanced.list_chrm_options.list_chrm) != "" :
+      -k ${advanced.list_chrm_options.list_chrm}
+    #end if
+
+    #if $advanced.list_chrm_options.type == "file":
+      -k ${advanced.list_chrm_options.list_chrm}
+    #end if
+
+    #if str($advanced.region) != "":
+      -Y "${advanced.region}"
+    #end if
+
+    #if str( $advanced.save_list_qual) == "true":
+      -M
+    #end if
+
+    #if str($advanced.min_read_coverage) != "10 10":
+      -c ${advanced.min_read_coverage}
+    #end if
+
+    #if str($advanced.min_qual_score) != "30 30":
+      -q ${advanced.min_qual_score}
+    #end if
+
+    #if str($advanced.min_map_qual_scor) != "30 30":
+      -m ${advanced.min_map_qual_scor}
+    #end if
+
+    #if str($advanced.min_homo_length) != "5 5":
+      -O ${advanced.min_homo_length}
+    #end if
+
+    #if str($advanced.infer_strand) != "1":
+      -s ${advanced.infer_strand}
+    #end if
+
+    #if str($advanced.strand_type) != "1":
+      -g ${advanced.strand_type}
+    #end if
+
+    #if $advanced.strand_conf != 0.70:
+      -x ${advanced.strand_conf}
+    #end if
+
+    #if str($advanced.strand_corr) == "true":
+      -S
+    #end if
+
+    #if $advanced.infer_gff:
+      -G $advanced.infer_gff
+    #end if
+
+    #if $advanced.exclude_gff:
+      -K $advanced.exclude_gff
+    #end if
+
+    #if $advanced.include_gff:
+      -T $advanced.include_gff
+    #end if
+
+    #if str($advanced.sort_ann_file) == "true":
+      -X
+    #end if
+
+    #if str($advanced.ex_mh_rna) == "true":
+      -e
+    #end if
+
+    #if str($advanced.ex_mh_dna) == "true":
+      -E
+    #end if
+
+    #if str($advanced.ex_dup_rna) == "true":
+      -d
+    #end if
+
+    #if str($advanced.ex_dup_dna) == "true":
+      -D
+    #end if
+
+    #if str($advanced.use_pair_rna) == "true":
+      -p
+    #end if
+
+    #if str($advanced.use_pair_dna) == "true":
+      -P
+    #end if
+
+    #if str($advanced.cons_map_qual_rna) == "true":
+      -u
+    #end if
+
+    #if str($advanced.cons_map_qual_dna) == "true":
+      -U
+    #end if
+
+    #if str($advanced.trim_rna) != "0 0":
+      -a ${advanced.trim_rna}
+    #end if
+
+    #if str($advanced.trim_dna) != "0 0":
+      -A ${advanced.trim_dna}
+    #end if
+
+    #if str($advanced.rm_subs_homo_rna) == "true":
+      -l
+    #end if
+
+    #if str($advanced.rm_subs_homo_dna) == "true":
+      -L
+    #end if
+
+    #if int($advanced.min_reads_sup_var) != 3:
+      -v ${advanced.min_reads_sup_var}
+    #end if
+
+    #if $advanced.min_ed_freq_rna != 0.10:
+      -n ${advanced.min_ed_freq_rna}
+    #end if
+
+    #if $advanced.min_ed_freq_dna != 0.10:
+      -N ${advanced.min_ed_freq_dna}
+    #end if
+
+    #if str($advanced.ex_pos_mult_ch_rna) == "true":
+      -z
+    #end if
+
+    #if str($advanced.ex_pos_mult_ch_dna) == "true":
+      -Z
+    #end if
+
+    #if str($advanced.list_var) != "all":
+      -W ${advanced.list_var}
+    #end if
+
+    #if str($advanced.ex_invar_pos) == "true":
+      -R
+    #end if
+
+    #if str($advanced.ex_sites_not_dna) == "true":
+      -V
+    #end if
+
+    #if $advanced.file_splice
+      -w $advanced.file_splice
+    #end if
+
+    #if int($advanced.n_bases_near_splice) != 4:
+      -r ${advanced.n_bases_near_splice}
+    #end if
+
+    #if str($advanced.no_head) == "true":
+      -H
+    #end if
+
+    #if bool($advanced.gzip):
+      -GZ
+    #end if
+
+    #if bool($advanced.reads):
+      -RR
+    #end if
+
+    #if $advanced.fastq_files
+      -FQ $advanced.fastq_files
+    #end if
+
+  </token>
+
+</macros>
