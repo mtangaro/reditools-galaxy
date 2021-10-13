@@ -192,6 +192,18 @@
       -FQ $advanced.fastq_files
     #end if
 
+    #if bool($advanced.addP):
+      -AP
+    #end if
+
+    #if bool($advanced.rmOver):
+      -RMO
+    #end if
+
+    #if bool($advanced.rmIndels):
+      -RMI
+    #end if
+
   </token>
 
 </macros>

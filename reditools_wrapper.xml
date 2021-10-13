@@ -175,9 +175,9 @@
         <param name="gzip" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Gzip output files" />
         <param name="reads" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Get reads containing nuc. changes" />
         <param name="fastq_files" format="fastq" type="data" label="Fastq to get reads" help="[requires -RR or reads], separated by space [if paired]" optional="true" />
-        <!--param name="addP Add positions for reads-->
-        <!--param name="rmOver        Remove overlapping reads-->
-        <!--param name="rmIndels      Remove positions with surrounding Indels-->
+        <param name="addP" type="boolean" truevalue="true" falsevalue="false" checked="False" label="addP Add positions for reads" />
+        <param name="rmOver" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove overlapping reads" />
+        <param name="rmIndels" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove positions with surrounding Indels"/>
 
     </section>
 
