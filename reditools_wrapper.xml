@@ -5,6 +5,10 @@
     <requirement type="package" version="1.0.4">reditools</requirement>
     <requirement type="package" version="0.15">pysam</requirement>
     <requirement type="package" version="0.1.4">fisher</requirement>
+    <requirement type="package" version="1.3">seqtk</requirement>
+    <requirement type="package" version="2.5">pblat</requirement>
+    <requirement type="package" version="1.13">samtools</requirement>
+    <requirement type="package" version="1.11">tabix</requirement>
   </requirements>
   <macros>
     <import>reditools_wrapper_macros.xml</import>
