@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!bin/python2.7
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -21,7 +21,6 @@ import gzip
 import argparse
 import os
 from multiprocessing import Process, Queue
-from Queue import Empty
 import time
 
 list_var = ['AC', 'AG', 'AT', 'CA', 'CG', 'CT', 'GA', 'GC', 'GT', 'TA', 'TC', 'TG']
@@ -35,35 +34,35 @@ except:
 pysamVersion = pysam.__version__
 
 sys.stderr.write('Pysam version used: %s\n' % pysamVersion)
-version = '1.2'
+version = '1.4'
 
 parser = argparse.ArgumentParser(description="REDItoolDnaRna")
 
-parser.add_argument("-i", "--input-rna", help="RNA-Seq BAM file")
-parser.add_argument("-j", "--input-dna", nargs='*', help="DNA-Seq BAM file(s separated by space) or folder")
-parser.add_argument("-I", "--input-sort-rna", action='store_true', help="Sort input RNA-Seq BAM file")
-parser.add_argument("-J", "--input-sort-dna", action='store_true', help="Sort input DNA-Seq BAM file")
-parser.add_argument("-f", "--reference", help="Reference in fasta file")
-parser.add_argument("-C", "--base-interval", type=int, default=100000, help="Base interval to explore (100000)")
+parser.add_argument("-i", "--input-rna", help="RNA-Seq BAM file") #
+parser.add_argument("-j", "--input-dna", nargs='*', help="DNA-Seq BAM file(s separated by space) or folder") #
+parser.add_argument("-I", "--input-sort-rna", action='store_true', help="Sort input RNA-Seq BAM file") #
+parser.add_argument("-J", "--input-sort-dna", action='store_true', help="Sort input DNA-Seq BAM file") #
+parser.add_argument("-f", "--reference", help="Reference in fasta file") #
+parser.add_argument("-C", "--base-interval", type=int, default=100000, help="Base interval to explore (100000)") #
 parser.add_argument("-k", "--list-chrm", nargs='*', type=str,
-                    help="List of chromosomes to skip (separated by space ex: chr1 chr2)")
-parser.add_argument("-t", "--threads", type=int, default=1, help="Number of threads")
+                    help="List of chromosomes to skip (separated by space ex: chr1 chr2)")#
+parser.add_argument("-t", "--threads", type=int, default=1, help="Number of threads")#
 parser.add_argument("-Y", "--region", type=str,
-                    help="Work Only On Region: chrxx:start-end (positions are distributed by the number of threads)")
-parser.add_argument("-o", "--output-folder", help="Output folder")
-parser.add_argument("-F", "--internal-folder", type=str, default='reditools' ,help="Internal folder name")
-parser.add_argument("-M", "--save-list-qual", action="store_true", help="Save a list of columns with quality scores")
+                    help="Work Only On Region: chrxx:start-end (positions are distributed by the number of threads)")#
+parser.add_argument("-o", "--output-folder", help="Output folder")#
+parser.add_argument("-F", "--internal-folder", type=str, default='reditools' ,help="Internal folder name")#
+parser.add_argument("-M", "--save-list-qual", action="store_true", help="Save a list of columns with quality scores")#
 parser.add_argument("-c", "--min-read-coverage", nargs=2, default=[10, 10], type=int,
-                    help="Min. read coverage (dna rna) [10 10]")
-parser.add_argument("-q", "--min-qual-score", nargs=2, default=[30, 30], type=int, help="Min. quality score (dna rna) [30 30]")
+                    help="Min. read coverage (dna rna) [10 10]")#
+parser.add_argument("-q", "--min-qual-score", nargs=2, default=[30, 30], type=int, help="Min. quality score (dna rna) [30 30]")#
 parser.add_argument("-m", "--min-map-qual-score", nargs=2, default=[30, 30], type=int,
-                    help="Min. mapping quality score (dna rna) [30 30] | Bowtie use 255 | Bowtie2 use 40 | BWA use 30 | RNA-STAR use 255 | HiSAT2 use 60 | Tophat1 use 255 | Tophat2 use 50 | GSNAP use 30")
+                    help="Min. mapping quality score (dna rna) [30 30] | Bowtie use 255 | Bowtie2 use 40 | BWA use 30 | RNA-STAR use 255 | HiSAT2 use 60 | Tophat1 use 255 | Tophat2 use 50 | GSNAP use 30")#
 parser.add_argument("-O", "--min-homo-length", nargs=2, default=[5, 5], type=int,
-                    help="Min. homoplymeric length (dna rna) [5 5]")
-parser.add_argument("-s", "--infer-strand", type=int, default=1, help="Infer strand (for strand oriented reads) [1]")
-parser.add_argument("-g", "--strand-type", type=int, default=1, help="Strand inference (1:maxValue) (2:useConfidence) [1]")
-parser.add_argument("-x", "--strand-conf", type=float, default=0.70, help="Strand confidence [0.70]")
-parser.add_argument("-S", "--strand-corr", action="store_true", help="Strand correction")
+                    help="Min. homoplymeric length (dna rna) [5 5]")#
+parser.add_argument("-s", "--infer-strand", type=int, default=1, help="Infer strand (for strand oriented reads) [1]")#
+parser.add_argument("-g", "--strand-type", type=int, default=1, help="Strand inference (1:maxValue) (2:useConfidence) [1]")#
+parser.add_argument("-x", "--strand-conf", type=float, default=0.70, help="Strand confidence [0.70]")#
+parser.add_argument("-S", "--strand-corr", action="store_true", help="Strand correction")#
 parser.add_argument("-G", "--infer-gff",
                     help="Infer strand by GFF annotation (must be GFF and sorted, otherwise use -X)")
 parser.add_argument("-K", "--exclude-gff",
@@ -553,7 +552,7 @@ if not os.path.exists(bamfile):
     sys.exit('RNA-Seq BAM file %s not found.' % (bamfile))
 if sortbam:
     sys.stderr.write('Sorting RNA-Seq BAM file.\n')
-    pysam.sort(bamfile, '%s_sorted' % (outfolder_))
+    pysam.sort("-o", '%s_sorted' % (outfolder_), bamfile)
     os.rename(bamfile, bamfile + '_old')
     os.rename('%s_sorted.bam' % (outfolder_), bamfile)
     sys.stderr.write('Indexing RNA-Seq BAM file.\n')
@@ -572,7 +571,7 @@ for i in gbamfile:
     else:
         if sortgbam:
             sys.stderr.write('Sorting DNA-Seq BAM file %s.\n' % (i[0]))
-            pysam.sort(i[0], '%s_sorted' % (outfolder_))
+            pysam.sort("-o", '%s_sorted' % (outfolder_), i[0])
             os.rename(i[0], i[0] + '_old')
             os.rename('%s_sorted.bam' % (outfolder_), i[0])
             sys.stderr.write('Indexing DNA-Seq BAM file %s.\n' % (i[0]))
@@ -580,7 +579,6 @@ for i in gbamfile:
         if not os.path.exists(i[0] + '.bai') and not sortgbam:
             sys.stderr.write('Indexing DNA-Seq BAM file %s.\n' % (i[0]))
             pysam.index(i[0])
-nogbam = 0
 if len(gbamfile) == 0:
     sys.stderr.write('Working without DNA-Seq BAM file(s).\n')
     nogbam = 1
@@ -1340,7 +1338,7 @@ if greads:
     fastqFiles = {'r1': os.path.join(outfolder, '%s_R1.fq' % (outfolder_)), 'r2': os.path.join(outfolder, '%s_R2.fq' % (outfolder_))}
     for i in range(1, len(fastq) + 1):
         sys.stderr.write('Getting reads R%i\n' % (i))
-        cmd = '/opt/exp_soft/biomed/epicardi/bin/seqtk subseq %s %s > %s' % (
+        cmd = 'seqtk subseq %s %s > %s' % (
         fastq[i - 1], outReadsFile, fastqFiles['r' + str(i)])
         os.system(cmd)
     for i in range(1, len(fastq) + 1):
