@@ -120,6 +120,14 @@
       -A ${advanced.trim_dna}
     #end if
 
+    #if $advanced.blat_corr_rna
+      -b $advanced.blat_corr_rna
+    #end if
+
+    #if $advanced.blat_corr_dna
+      -B $advanced.blat_corr_dna
+    #end if
+
     #if str($advanced.rm_subs_homo_rna) == "true":
       -l
     #end if

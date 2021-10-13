@@ -155,11 +155,10 @@
         <param name="use_pair_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Use paired concardant reads only in DNA-Seq" />
         <param name="cons_map_qual_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Consider mapping quality in RNA-Seq" />
         <param name="cons_map_qual_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Consider mapping quality in DNA-Seq" />
-
         <param name="trim_rna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in RNA-Seq" help="Default: 0 0" />
         <param name="trim_dna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in DNA-Seq" help="Default: 0 0" />
-        <!--param name="blat_corr_rna" Blat folder for correction in RNA-Seq-->
-        <!--param name="blat_corr_dna" Blat folder for correction in DNA-Seq-->
+        <param name="blat_corr_rna" format="bad" type="data" label="Blat file for correction in RNA-Seq" help="File in bad format" />
+        <param name="blat_corr_dna" format="bad" type="data" label="Blat file for correction in DNA-Seq" help="File in bad format" />
         <param name="rm_subs_homo_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in RNA-Seq" />
         <param name="rm_subs_homo_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in DNA-Seq" />
         <param name="min_reads_sup_var" type="integer" value="3" label="Min. num. of reads supporting the variation for RNA-Seq" help="Default: 3" />
@@ -174,7 +173,6 @@
         <param name="n_bases_near_splice" type="integer" value="4" label="Num. of bases near splice sites to explore" help="Default: 4" />
         <param name="no_head" type="boolean" truevalue="true" falsevalue="false" checked="False" label="No Table Header" />
         <param name="gzip" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Gzip output files" />
-
         <param name="reads" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Get reads containing nuc. changes" />
         <param name="fastq_files" format="fastq" type="data" label="Fastq to get reads" help="[requires -RR or reads], separated by space [if paired]" optional="true" />
         <!--param name="addP Add positions for reads-->
