@@ -20,11 +20,7 @@
       -C ${advanced.base_interval}
     #end if
 
-    #if $advanced.list_chrm_options.type == "list" and str($advanced.list_chrm_options.list_chrm) != "" :
-      -k ${advanced.list_chrm_options.list_chrm}
-    #end if
-
-    #if $advanced.list_chrm_options.type == "file":
+    #if str($advanced.list_chrm_options.list_chrm) != "" :
       -k ${advanced.list_chrm_options.list_chrm}
     #end if
 

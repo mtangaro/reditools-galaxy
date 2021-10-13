@@ -120,18 +120,7 @@
     <section name="advanced" expanded="false" title="Advanced parameters">
 
         <param name="base_interval" type="integer" value="100000" label="Base Interval to explore" help="Default: 100000" />
-        <conditional name="list_chrm_options">
-            <param name="type" type="select" label="List of chromosomes to skip" help="List or file" >
-                <option value="list">list</option>
-                <option value="file">file</option>
-            </param>
-            <when value="list">
-                <param name="list_chrm" type="text" label="Separated by space ex: chr1 chr2" />
-            </when>
-            <when value="file">
-                <param name="list_chrm" type="data" format="txt" label="File with separated by space ex: chr1 chr2" />
-            </when>
-        </conditional>
+        <param name="list_chrm" type="text" label="List of chromosomes to skip" help="Separated by space ex: chr1 chr2"/>
         <param name="region" type="text" label="Work Only On Region: chrxx:start-end." help="positions are distributed by the number of threads"/>
         <param name="save_list_qual" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Save a list of columns with quality scores" />
         <param name="min_read_coverage" type="text" value="10 10" label="Min. read coverage (dna rna)" help="Default: 10 10"/>
