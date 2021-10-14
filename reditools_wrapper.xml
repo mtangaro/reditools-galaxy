@@ -157,8 +157,8 @@
         <param name="cons_map_qual_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Consider mapping quality in DNA-Seq" />
         <param name="trim_rna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in RNA-Seq" help="Default: 0 0" />
         <param name="trim_dna" type="text" value="0 0" label="Trim x bases up and y bases down per read [0 0] in DNA-Seq" help="Default: 0 0" />
-        <param name="blat_corr_rna" format="bad" type="data" label="Blat file for correction in RNA-Seq" help="File in bad format" />
-        <param name="blat_corr_dna" format="bad" type="data" label="Blat file for correction in DNA-Seq" help="File in bad format" />
+        <param name="blat_corr_rna" format="bad" type="data" label="Blat file for correction in RNA-Seq" help="File in bad format" optional="true" />
+        <param name="blat_corr_dna" format="bad" type="data" label="Blat file for correction in DNA-Seq" help="File in bad format" optional="true" />
         <param name="rm_subs_homo_rna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in RNA-Seq" />
         <param name="rm_subs_homo_dna" type="boolean" truevalue="true" falsevalue="false" checked="False" label="Remove substitutions in homopolymeric regions in DNA-Seq" />
         <param name="min_reads_sup_var" type="integer" value="3" label="Min. num. of reads supporting the variation for RNA-Seq" help="Default: 3" />
